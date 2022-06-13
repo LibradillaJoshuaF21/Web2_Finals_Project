@@ -5,10 +5,17 @@ require_once "init.php";
 use Sessions\Session;
 Session::start();
 
+//Session::remove('orderList');
+
 $customerName = $_SESSION['customerName'];
 
-$CustomerOrderList = new OrderList;
+$CustomerOrderList = new OrderList();
 
+if($_REQUEST){
+    if(isset($_REQUEST['delete'])){
+        $CustomerOrderList->removeOrder($_REQUEST['delete']);
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -33,11 +40,42 @@ $CustomerOrderList = new OrderList;
         <h2>Menu</h2>
         <div id="menu">
         </div>
-        <button type="submit" form="itemForm" name="addOrder">Add To Your Order</button>
+        <button type="submit" name="addOrder">Add To Your Order</button>
+        <?php
+            if($_REQUEST){
+                if(isset($_REQUEST['addOrder'])){
+                    if(isset($_REQUEST['menuItem']) && $_REQUEST['selection'] != 'placeholder'){
+                        $itemData = explode(".", $_REQUEST['menuItem']);
+                        $CustomerOrderList->addOrder($itemData[0],floatval($itemData[1]),$itemData[2],$_REQUEST['option']);
+                    }
+                }
+            }
+        ?>
         <hr>
         <h2>Your Orders</h2>
         <div id="orders">
+            <?php
+                if($_REQUEST){
+                    foreach($_SESSION['orderList'] as $key=>$order){
+                        echo '<label>'.$order->getName().'   ₱'.$order->getPrice().'</label>';
+                        echo '<button type="submit" name="delete" value="'.$key.'">X</button><br>';
+                    }
+                }
+            ?>
         </div>
+        <button type="submit" name="placeOrder">Place your Order</button>
+        <?php
+            if($_REQUEST){
+                if(isset($_REQUEST['placeOrder'])){
+                    if(!empty($_SESSION['orderList'])){
+                        header('Location: receipt.php');
+                    }
+                    else{
+                        echo '<br><h3>Please input your name betch</h3>';
+                    }
+                }
+            }
+        ?>
     </form>
 </body>
 <script>
@@ -105,7 +143,7 @@ $CustomerOrderList = new OrderList;
                 <br>
                 <div id="menuOptions">
                     <select name="option" id="option" >
-                        <option value=1>One Portion</option>
+                        <option value=1 selected>One Portion</option>
                         <option value=2>Two Portion</option>
                         <option value=3>Three Portion</option>
                     </select>
@@ -118,7 +156,7 @@ $CustomerOrderList = new OrderList;
                 <br>
                     <div id="menuOptions">
                     <select name="option" id="option">
-                        <option value=1>Tall</option>
+                        <option value=1 selected>Tall</option>
                         <option value=2>Grande</option>
                         <option value=3>Venti</option>
                     </select>
@@ -131,18 +169,3 @@ $CustomerOrderList = new OrderList;
 
 </script>
 </html>
-
-<?php
-
-    if($_REQUEST){
-        if(isset($_REQUEST['addOrder'])){
-            if(isset($_REQUEST['menuItem'])){
-                $itemData = explode(".", $_REQUEST['menuItem']);
-                $OrderList->addOrder($itemData[0],floatval($itemData[1]),$itemData[2],$_REQUEST['option']);
-                echo $_SESSION['orderList'];
-            }
-        }
-    }
-
-
-?>
