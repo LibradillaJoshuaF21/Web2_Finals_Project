@@ -28,7 +28,7 @@ class Beverage extends Consumable implements IBeverage {
         return $this;
     }
 
-    public function getSize(): string{
+    public function getOption(): string{
         $sizeString = '';
         switch($this->beverageSize){
             case 1: $sizeString = 'Tall'; break;

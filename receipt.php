@@ -43,7 +43,7 @@ Session::start();
             <hr>
             <?php
                 foreach($_SESSION['orderList'] as $key=>$order){
-                    echo '<label>'.$order->getName().'   ₱'.$order->getPrice().'</label><br>';
+                    echo '<label>'.$order->getName().' || '.$order->getOption().' || '.$order->getOption2().'   :  ₱'.$order->getPrice().'</label><br>';
                 }
             ?>
             <hr>

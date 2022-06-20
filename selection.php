@@ -64,7 +64,9 @@ if($_REQUEST){
                 if(isset($_REQUEST['addOrder'])){
                     if(isset($_REQUEST['menuItem']) && $_REQUEST['selection'] != 'placeholder'){
                         $itemData = explode(".", $_REQUEST['menuItem']);
-                        $CustomerOrderList->addOrder($itemData[0],floatval($itemData[1]),$itemData[2],$_REQUEST['option']);
+                        $CustomerOrderList->addOrder($itemData[0],floatval($itemData[1]),$itemData[2],$_REQUEST['option'],$_REQUEST['option2'] );
+                    } else {
+                        echo "<br><br><p style='font-size:12px; color: #939393; font-weight: 450;'>Please choose an item to order.<p>";
                     }
                 }
             }
@@ -76,10 +78,12 @@ if($_REQUEST){
         <div id="orders">
             <?php
                 if($_REQUEST){
-                    foreach($_SESSION['orderList'] as $key=>$order){
-                        echo '<label style = "padding-right: 2em; text-align: right; font-size: 16px;">'.$order->getName().'   ₱'.$order->getPrice().'</label>';
-                        echo '<button type="submit" name="delete" value="'.$key.'" style = "padding: 5px; font-size: 7px; height: 20px; width: 20px;
-                        margin-top: 1.5em;">x</button><br>';
+                    if(isset($_SESSION['orderList'])){
+                        foreach($_SESSION['orderList'] as $key=>$order){
+                            echo '<label style = "padding-right: 2em; text-align: right; font-size: 16px;">'.$order->getName().' || '.$order->getOption().' || '.$order->getOption2().'   :  ₱'.$order->getPrice().'</label>';
+                            echo '<button type="submit" name="delete" value="'.$key.'" style = "padding: 5px; font-size: 7px; height: 20px; width: 20px;
+                            margin-top: 1.5em;">x</button><br>';
+                        }
                     }
                 }
             ?>
@@ -172,8 +176,43 @@ if($_REQUEST){
                     </select>
                 </div>
                 <br>
-
             `
+            
+            if(result.data[0].conID == 4){
+                layout += `
+                <div id="menuOptions2">
+                    <select name="option2" id="option2" >
+                        <option value=1 selected>Mayonnaise</option>
+                        <option value=2>Cheese</option>
+                        <option value=3>Ketchup</option>
+                    </select>
+                </div>
+                <br>
+            `
+            } else if(result.data[0].conID == 5){
+                layout += `
+                <div id="menuOptions2">
+                    <select name="option2" id="option2" >
+                        <option value=1 selected>1 Sriracha Packet</option>
+                        <option value=2>2 Sriracha Packets</option>
+                        <option value=3>3 Sriracha Packets</option>
+                    </select>
+                </div>
+                <br>
+            `
+            } else if(result.data[0].conID == 6){
+                layout += `
+                <div id="menuOptions2">
+                    <select name="option2" id="option2" >
+                        <option value=1 selected>Warmed</option>
+                        <option value=2>Not Warmed</option>
+                        <option value=3>Cold</option>
+                    </select>
+                </div>
+                <br>
+            `
+            }
+
         } else {
             layout += `
                 <br>
@@ -186,7 +225,44 @@ if($_REQUEST){
                 </div>
                 <br>
             `
+
+            if(result.data[0].conID == 1){
+                layout += `
+                <div id="menuOptions2">
+                    <select name="option2" id="option2" >
+                        <option value=1 selected>2% Milk</option>
+                        <option value=2>Sugar</option>
+                        <option value=3>Honey</option>
+                    </select>
+                </div>
+                <br>
+            `
+            } else if(result.data[0].conID == 2){
+                layout += `
+                <div id="menuOptions2">
+                    <select name="option2" id="option2" >
+                        <option value=1 selected>2% Milk</option>
+                        <option value=2>Nonfat Milk</option>
+                        <option value=3>Whole Milk</option>
+                    </select>
+                </div>
+                <br>
+            `
+            } else if(result.data[0].conID == 3){
+                layout += `
+                <div id="menuOptions2">
+                    <select name="option2" id="option2" >
+                        <option value=1 selected>Vanilla Syrup</option>
+                        <option value=2>Caramel Syrup</option>
+                        <option value=3>Brown Sugar Syrup</option>
+                    </select>
+                </div>
+                <br>
+            `
+            }
+
         }
+
         menu.innerHTML = layout;
     }
 

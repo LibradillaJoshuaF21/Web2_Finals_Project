@@ -28,9 +28,9 @@ class Food extends Consumable implements IFood {
         return $this;
     }
 
-    public function getPortion(): string{
+    public function getOption(): string{
         $foodPortion = '';
-        switch($this->beverageSize){
+        switch($this->foodPortion){
             case 1: $foodPortion = 'One Portion'; break;
             case 2: $foodPortion = 'Two Portion'; break;
             case 3: $foodPortion = 'Three Portion'; break;
